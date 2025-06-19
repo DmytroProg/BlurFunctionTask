@@ -18,8 +18,8 @@ namespace BlurFunctionTask
     public partial class MainWindow : Window
     {
         private bool _isPainting;
-        private int _canvasWidth = 3;
-        private int _canvasHeight = 3;
+        private int _canvasWidth = 50;
+        private int _canvasHeight = 40;
         private Rectangle _selectedBrushRect;
         private readonly Brush[] _brushes;
         private Rectangle[,] _dotsMap;
@@ -30,7 +30,7 @@ namespace BlurFunctionTask
             _brushes = [
                 Brushes.Red, 
                 Brushes.Blue, 
-                new SolidColorBrush(Color.FromRgb(0, 255, 0)), 
+                Brushes.Green, 
                 Brushes.Yellow,
                 Brushes.Purple,
                 Brushes.Pink,
@@ -149,15 +149,22 @@ namespace BlurFunctionTask
                 }
             }
 
-            var bluredPicture = GraphicsFunctions.BlurPicture(pictureMatrix, _canvasWidth, _canvasHeight);
-
-            for (int x = 0; x < _canvasWidth; x++)
+            try
             {
-                for (int y = 0; y < _canvasHeight; y++)
+                var bluredPicture = GraphicsFunctions.BlurPicture(pictureMatrix, _canvasWidth, _canvasHeight);
+
+                for (int x = 0; x < _canvasWidth; x++)
                 {
-                    var color = Color.FromRgb(bluredPicture[x, y].R, bluredPicture[x, y].G, bluredPicture[x, y].B);
-                    _dotsMap[x, y].Fill = new SolidColorBrush(color);
+                    for (int y = 0; y < _canvasHeight; y++)
+                    {
+                        var color = Color.FromRgb(bluredPicture[x, y].R, bluredPicture[x, y].G, bluredPicture[x, y].B);
+                        _dotsMap[x, y].Fill = new SolidColorBrush(color);
+                    }
                 }
+            }
+            catch(Exception ex)
+            {
+                return;
             }
         }
     }
